@@ -11,7 +11,7 @@
     },
     "servers": [
         {
-            "url": "https://giftback.teloscrm.com.br/api/v1/datasystem",
+            "url": "https://giftback.telosdigital.app.br/api/v1/datasystem",
             "description": "Servidor de Produção"
         }
     ],
