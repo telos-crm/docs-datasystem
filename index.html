@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telos Giftback API - DataSystem</title>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css">
+    <link rel="icon" type="image/png" href="https://teloscrm.com.br/favicon.ico">
+    <style>
+        html {
+            box-sizing: border-box;
+            overflow: -moz-scrollbars-vertical;
+            overflow-y: scroll;
+        }
+        
+        *,
+        *:before,
+        *:after {
+            box-sizing: inherit;
+        }
+
+        body {
+            margin: 0;
+            background: #fafafa;
+        }
+
+        .swagger-ui .topbar {
+            background-color: #1a1a2e;
+            padding: 10px 0;
+        }
+
+        .swagger-ui .topbar .download-url-wrapper {
+            display: none;
+        }
+
+        .topbar-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1460px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .topbar-wrapper .link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .topbar-wrapper .link img {
+            height: 40px;
+        }
+
+        .topbar-wrapper .link span {
+            color: #fff;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .swagger-ui .info .title {
+            color: #1a1a2e;
+        }
+
+        .swagger-ui .info .description p {
+            color: #3b4151;
+        }
+
+        .swagger-ui .opblock.opblock-post {
+            border-color: #49cc90;
+            background: rgba(73, 204, 144, .1);
+        }
+
+        .swagger-ui .opblock.opblock-post .opblock-summary-method {
+            background: #49cc90;
+        }
+
+        /* Custom header */
+        .custom-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .custom-header .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .custom-header .logo-section img {
+            height: 45px;
+        }
+
+        .custom-header .logo-section h1 {
+            margin: 0;
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+
+        .custom-header .logo-section span {
+            background: #e94560;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        .custom-header .support-info {
+            text-align: right;
+            font-size: 0.9em;
+        }
+
+        .custom-header .support-info a {
+            color: #4ecdc4;
+            text-decoration: none;
+        }
+
+        .custom-header .support-info a:hover {
+            text-decoration: underline;
+        }
+
+        /* Hide default topbar */
+        .swagger-ui .topbar {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .custom-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            .custom-header .support-info {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="custom-header">
+        <div class="logo-section">
+            <img src="https://teloscrm.com.br/wp-content/uploads/2023/03/logo-telos-branca.png" alt="Telos CRM" onerror="this.style.display='none'">
+            <div>
+                <h1>Giftback API <span>DataSystem</span></h1>
+            </div>
+        </div>
+        <div class="support-info">
+            <p>Suporte: <a href="mailto:diego.dias@teloscrm.com.br">diego.dias@teloscrm.com.br</a></p>
+            <p>Documentação v1.0.0</p>
+        </div>
+    </header>
+    
+    <div id="swagger-ui"></div>
+
+    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js" charset="UTF-8"></script>
+    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-standalone-preset.js" charset="UTF-8"></script>
+    <script>
+        window.onload = function() {
+            window.ui = SwaggerUIBundle({
+                url: "./openapi.json",
+                dom_id: '#swagger-ui',
+                deepLinking: true,
+                presets: [
+                    SwaggerUIBundle.presets.apis,
+                    SwaggerUIStandalonePreset
+                ],
+                plugins: [
+                    SwaggerUIBundle.plugins.DownloadUrl
+                ],
+                layout: "StandaloneLayout",
+                defaultModelsExpandDepth: -1,
+                docExpansion: "list",
+                filter: true,
+                showExtensions: true,
+                showCommonExtensions: true,
+                tryItOutEnabled: false, // Desabilitar "Try it out" em produção
+                supportedSubmitMethods: [] // Remove botões de execução
+            });
+        };
+    </script>
+</body>
+</html>

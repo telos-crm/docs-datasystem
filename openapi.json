@@ -1,0 +1,525 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Telos Giftback API - DataSystem",
+        "description": "API customizada para integração com ERP DataSystem. Fluxo simplificado focado em autenticação e validação de PIN.",
+        "contact": {
+            "name": "Telos CRM - Suporte Técnico",
+            "email": "diego.dias@teloscrm.com.br"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://giftback.teloscrm.com.br/api/v1/datasystem",
+            "description": "Servidor de Produção"
+        }
+    ],
+    "paths": {
+        "/auth": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Autenticar e gerar token JWT",
+                "description": "Autentica usando client_id (CNPJ) e client_secret (API Key) e retorna tokens JWT",
+                "operationId": "37251e80e6276cf9a88541bdb8d37a50",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "description": "CNPJ da loja sem máscara",
+                                        "type": "string",
+                                        "example": "12345678000190"
+                                    },
+                                    "password": {
+                                        "description": "API Key da loja",
+                                        "type": "string",
+                                        "example": "as214d1237155b6b31f1690c1b59132132"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Autenticação bem-sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "description": "Token JWT de acesso",
+                                            "type": "string"
+                                        },
+                                        "access_token_expires_in": {
+                                            "type": "integer",
+                                            "example": 3600
+                                        },
+                                        "refresh_token": {
+                                            "description": "Token JWT para renovação",
+                                            "type": "string"
+                                        },
+                                        "refresh_token_expires_in": {
+                                            "type": "integer",
+                                            "example": 604800
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Credenciais inválidas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid credentials"
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/refresh": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Renovar token de acesso",
+                "description": "Usa o refresh_token para obter um novo access_token",
+                "operationId": "6c1f37104499588479e53ddf6abd0cbe",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "refresh_token"
+                                ],
+                                "properties": {
+                                    "refresh_token": {
+                                        "description": "Token de renovação obtido no login",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token renovado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string"
+                                        },
+                                        "access_token_expires_in": {
+                                            "type": "integer",
+                                            "example": 3600
+                                        },
+                                        "refresh_token": {
+                                            "type": "string"
+                                        },
+                                        "refresh_token_expires_in": {
+                                            "type": "integer",
+                                            "example": 604800
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Refresh token inválido ou expirado"
+                    }
+                }
+            }
+        },
+        "/pin/send": {
+            "post": {
+                "tags": [
+                    "PIN"
+                ],
+                "summary": "Enviar PIN para cliente",
+                "description": "Gera e envia PIN via SMS para validação de transação. Fluxo simplificado para DataSystem.",
+                "operationId": "5fe791812bf82402888f60b4a358d149",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "customer"
+                                ],
+                                "properties": {
+                                    "customer": {
+                                        "required": [
+                                            "document_number",
+                                            "name",
+                                            "phone"
+                                        ],
+                                        "properties": {
+                                            "document_number": {
+                                                "description": "CPF do cliente (apenas números)",
+                                                "type": "string",
+                                                "example": "12345678901"
+                                            },
+                                            "name": {
+                                                "description": "Nome completo do cliente",
+                                                "type": "string",
+                                                "example": "Diego Dias"
+                                            },
+                                            "phone": {
+                                                "description": "Telefone do cliente (DDD + número)",
+                                                "type": "string",
+                                                "example": "11999998888"
+                                            },
+                                            "country_code": {
+                                                "description": "Código do país (opcional, padrão: 55)",
+                                                "type": "integer",
+                                                "example": 55
+                                            },
+                                            "email": {
+                                                "description": "E-mail do cliente (opcional)",
+                                                "type": "string",
+                                                "example": "diego.dias@test.com.br"
+                                            },
+                                            "birth": {
+                                                "description": "Data de nascimento DD/MM/YYYY (opcional)",
+                                                "type": "string",
+                                                "example": "06/12/1991"
+                                            },
+                                            "gender": {
+                                                "description": "Sexo M/F (opcional)",
+                                                "type": "string",
+                                                "example": "M"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "gross_value": {
+                                        "description": "Valor bruto da venda (opcional)",
+                                        "type": "number",
+                                        "example": 100
+                                    },
+                                    "items": {
+                                        "description": "Itens da venda (opcional)",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "sku": {
+                                                    "type": "string",
+                                                    "example": "ABC-12345-S-BL"
+                                                },
+                                                "value_of": {
+                                                    "type": "number",
+                                                    "example": 100
+                                                },
+                                                "value_per": {
+                                                    "type": "number",
+                                                    "example": 80
+                                                },
+                                                "quantity": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "PIN enviado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Pin successfully sent"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user_id": {
+                                                    "description": "ID único do cliente para uso nas demais requisições",
+                                                    "type": "string",
+                                                    "example": "0zXtCRB91brXqq92ud5KqQ=="
+                                                },
+                                                "request_pin": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "text_pin": {
+                                                    "type": "string",
+                                                    "example": "TELOS Giftback: PIN 3885 - Ao passar pin você concorda com https://www.telosdigital.com.br/termos-uso"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Dados inválidos"
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token JWT inválido ou expirado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/pin/validate": {
+            "post": {
+                "tags": [
+                    "PIN"
+                ],
+                "summary": "Validar PIN do cliente",
+                "description": "Valida o PIN informado pelo cliente. O PIN tem validade de 5 minutos e 3 tentativas.",
+                "operationId": "a2395c21b144628767c12addb18e577f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "pin"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "description": "ID do cliente obtido no /pin/send",
+                                        "type": "string",
+                                        "example": "0zXtCRB91brXqq92ud5KqQ=="
+                                    },
+                                    "pin": {
+                                        "description": "PIN de 4 dígitos informado pelo cliente",
+                                        "type": "string",
+                                        "example": "3885"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resultado da validação do PIN",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user_id": {
+                                                    "type": "string",
+                                                    "example": "0zXtCRB91brXqq92ud5KqQ=="
+                                                },
+                                                "valid_pin": {
+                                                    "description": "true se PIN válido",
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "pin_master": {
+                                                    "description": "true se foi usado PIN master",
+                                                    "type": "boolean",
+                                                    "example": false
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos"
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/pin/resend": {
+            "post": {
+                "tags": [
+                    "PIN"
+                ],
+                "summary": "Reenviar PIN para cliente",
+                "description": "Reenvia o PIN para o telefone cadastrado do cliente. Gera um novo PIN e invalida o anterior.",
+                "operationId": "e1b5a79589189fc2751abce951f56105",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "description": "ID do cliente obtido no /pin/send",
+                                        "type": "string",
+                                        "example": "0zXtCRB91brXqq92ud5KqQ=="
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "PIN reenviado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user_id": {
+                                                    "type": "string",
+                                                    "example": "0zXtCRB91brXqq92ud5KqQ=="
+                                                },
+                                                "text_pin": {
+                                                    "type": "string",
+                                                    "example": "TELOS Giftback: PIN 3575 - Reenvio solicitado - https://www.telosdigital.com.br/termos-uso"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos"
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Autenticação",
+            "description": "Autenticação e renovação de tokens JWT"
+        },
+        {
+            "name": "PIN",
+            "description": "Envio e validação de PIN para identificação do cliente"
+        }
+    ]
+}
