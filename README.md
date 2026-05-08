@@ -5,7 +5,7 @@ Documentação da API Giftback para integração com ERP DataSystem.
 ## 🔗 Acesso
 
 - **Documentação**: https://docs-datasystem.telosdigital.app.br
-- **API Base URL**: https://giftback.telosdigital.app.br/api/v1/datasystem
+- **API Base URL**: https://giftback.teloscrm.com.br/api/v1/datasystem
 
 ## 📋 Endpoints Disponíveis
 
@@ -22,7 +22,7 @@ Documentação da API Giftback para integração com ERP DataSystem.
 A API usa JWT Bearer Token. Obtenha o token via `/auth`:
 
 ```bash
-curl -X POST https://giftback.telosdigital.app.br/api/v1/datasystem/auth \
+curl -X POST https://giftback.teloscrm.com.br/api/v1/datasystem/auth \
   -H "Content-Type: application/json" \
   -d '{"username": "SEU_CLIENT_ID", "password": "SEU_CLIENT_SECRET"}'
 ```
