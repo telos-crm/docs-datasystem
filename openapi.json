@@ -11,8 +11,12 @@
     },
     "servers": [
         {
-            "url": "https://giftback.telosdigital.app.br/api/v1/datasystem",
-            "description": "Servidor de Produção"
+            "url": "https://giftback.teloscrm.com.br/api/v1/datasystem",
+            "description": "Produção"
+        },
+        {
+            "url": "https://giftback.hom.teloscrm.com.br/api/v1/datasystem",
+            "description": "Homologação"
         }
     ],
     "paths": {
@@ -94,8 +98,9 @@
                                             "example": "Invalid credentials"
                                         },
                                         "data": {
-                                            "type": "string",
-                                            "example": ""
+                                            "type": "object",
+                                            "example": null,
+                                            "nullable": true
                                         }
                                     },
                                     "type": "object"
@@ -318,8 +323,9 @@
                                             "example": "Dados inválidos"
                                         },
                                         "data": {
-                                            "type": "string",
-                                            "example": ""
+                                            "type": "object",
+                                            "example": null,
+                                            "nullable": true
                                         }
                                     },
                                     "type": "object"
