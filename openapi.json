@@ -188,6 +188,16 @@
                                     "customer"
                                 ],
                                 "properties": {
+                                    "seller_name": {
+                                        "description": "Nome do vendedor (opcional)",
+                                        "type": "string",
+                                        "example": "Leonardo Campos"
+                                    },
+                                    "seller_id": {
+                                        "description": "Código do vendedor no sistema de origem (opcional)",
+                                        "type": "string",
+                                        "example": "V-001"
+                                    },
                                     "customer": {
                                         "required": [
                                             "document_number",
