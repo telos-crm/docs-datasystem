@@ -1,39 +1,33 @@
-# Telos Giftback API - Documentação DataSystem
+# Cashback API — DataSystem — Documentação pública
 
-Documentação da API Giftback para integração com ERP DataSystem.
+Guia, fluxo e referência da integração de cashback da Telos com o ERP **DataSystem**
+(PIN por SMS no caixa, voucher controlado pelo ERP, cashback processado D+1).
 
-## 🔗 Acesso
+Publicada no GitHub Pages via workflow (`deploy.yml`, build VitePress a cada push na `main`).
 
-- **Documentação**: https://docs-datasystem.telosdigital.app.br
-- **API Base URL**: https://giftback.teloscrm.com.br/api/v1/datasystem
+## Arquitetura
 
-## 📋 Endpoints Disponíveis
+| Caminho | O quê |
+|---|---|
+| `index.md`, `guia/`, `fluxos/` | Conteúdo do site (VitePress, markdown) |
+| `reference.md` | Página da referência interativa (Scalar) |
+| `public/openapi.json` | **A spec da API — sincronizada automaticamente do repo privado `telos-crm` pelo workflow `api-docs.yml` (GitHub App). Não editar manualmente.** |
+| `public/CNAME` | Domínio próprio (`docs-datasystem.telosdigital.app.br`) |
+| `.vitepress/theme/` | Tema custom (marca Telos) + integração Scalar + mermaid sob demanda |
 
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| POST | `/auth` | Autenticação - obtém access_token e refresh_token |
-| POST | `/refresh` | Renovação de token |
-| POST | `/pin/send` | Envio de PIN por SMS |
-| POST | `/pin/validate` | Validação do PIN |
-| POST | `/pin/resend` | Reenvio do PIN |
+O fonte da spec são as annotations `@OA\*` nos controllers DataSystem da API
+(repo `telos-crm`); o JSON é gerado por CI e publicado aqui pelo sync.
 
-## 🔐 Autenticação
-
-A API usa JWT Bearer Token. Obtenha o token via `/auth`:
+## Desenvolvimento
 
 ```bash
-curl -X POST https://giftback.teloscrm.com.br/api/v1/datasystem/auth \
-  -H "Content-Type: application/json" \
-  -d '{"username": "SEU_CLIENT_ID", "password": "SEU_CLIENT_SECRET"}'
+npm ci
+npm run dev        # http://localhost:3301
+npm run build      # .vitepress/dist
 ```
 
-Use o `access_token` retornado no header `Authorization: Bearer {token}`.
+## Notas de deploy
 
-## 📞 Suporte
-
-- Email: diego.dias@telosdigital.app.br
-- Site: https://telosdigital.app.br
-
-## 🔄 Atualização
-
-Para atualizar a documentação, copie o novo `openapi.json` do servidor e faça commit.
+- `cleanUrls: false`: GitHub Pages não faz rewrite de `/caminho` → `/caminho.html`.
+- `base`: o domínio `docs-datasystem.telosdigital.app.br` é a raiz (`/`).
+  Se um dia o site voltar ao subcaminho do github.io, ajustar `DOCS_BASE`.
